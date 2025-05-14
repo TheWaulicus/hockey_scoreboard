@@ -19,8 +19,10 @@ function startTimer() {
     if (timerSeconds > 0) {
       timerSeconds--;
       updateTimerDisplay();
+      saveState();
     } else {
       stopTimer();
+      saveState();
     }
   }, 1000);
 }
@@ -28,12 +30,14 @@ function startTimer() {
 function stopTimer() {
   timerRunning = false;
   clearInterval(timerInterval);
+  saveState();
 }
 
 function resetTimer() {
   stopTimer();
   timerSeconds = 20 * 60;
   updateTimerDisplay();
+  saveState();
 }
 
 document.getElementById("timerDisplay").addEventListener("input", function (e) {
@@ -45,11 +49,13 @@ document.getElementById("timerDisplay").addEventListener("input", function (e) {
   if (isNaN(s)) s = 0;
   timerSeconds = m * 60 + s;
   updateTimerDisplay();
+  saveState();
 });
 
 function changePeriod(delta) {
   period = Math.max(1, period + delta);
   document.getElementById("periodValue").textContent = period;
+  saveState();
 }
 
 // Score and shots
@@ -64,6 +70,7 @@ function updateScore(team, delta, type) {
   document.getElementById(
     `team${team}${type.charAt(0).toUpperCase() + type.slice(1)}`
   ).textContent = teamState[team][type];
+  saveState();
 }
 
 // Settings modal
@@ -103,6 +110,7 @@ function applySettings() {
     reader.readAsDataURL(teamBLogoInput.files[0]);
   }
   toggleSettings(false);
+  saveState();
 }
 
 // Penalties
@@ -138,15 +146,53 @@ function addPenalty(team) {
   renderPenalties(team);
   hidePenaltyForm(team);
   document.getElementById(`team${team}PenaltyForm`).reset();
+  saveState();
 }
 
 function removePenalty(team, idx) {
   penalties[team].splice(idx, 1);
   renderPenalties(team);
+  saveState();
 }
 
-// Init
-window.onload = function () {
+// --- Persistence ---
+const STORAGE_KEY = "hockeyScoreboardState";
+
+function saveState() {
+  const state = {
+    timerSeconds,
+    period,
+    teamState,
+    penalties,
+    leagueName: document.getElementById("leagueName").textContent,
+    teamAName: document.getElementById("teamAName").textContent,
+    teamBName: document.getElementById("teamBName").textContent,
+    leagueLogo: document.getElementById("leagueLogo").src,
+    teamALogo: document.getElementById("teamALogo").src,
+    teamBLogo: document.getElementById("teamBLogo").src,
+    timeouts: window.timeouts || { A: 0, B: 0 },
+    theme: document.body.dataset.theme || "dark",
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function loadState() {
+  const state = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  if (!state) return;
+  timerSeconds = state.timerSeconds;
+  period = state.period;
+  teamState.A = state.teamState.A;
+  teamState.B = state.teamState.B;
+  penalties.A = state.penalties.A;
+  penalties.B = state.penalties.B;
+  document.getElementById("leagueName").textContent = state.leagueName;
+  document.getElementById("teamAName").textContent = state.teamAName;
+  document.getElementById("teamBName").textContent = state.teamBName;
+  document.getElementById("leagueLogo").src = state.leagueLogo;
+  document.getElementById("teamALogo").src = state.teamALogo;
+  document.getElementById("teamBLogo").src = state.teamBLogo;
+  window.timeouts = state.timeouts;
+  document.body.dataset.theme = state.theme;
   updateTimerDisplay();
   document.getElementById("periodValue").textContent = period;
   document.getElementById("teamAScore").textContent = teamState.A.score;
@@ -155,4 +201,28 @@ window.onload = function () {
   document.getElementById("teamBShots").textContent = teamState.B.shots;
   renderPenalties("A");
   renderPenalties("B");
+  renderTimeouts();
+  updateTheme();
+}
+
+function resetAll() {
+  localStorage.removeItem(STORAGE_KEY);
+  window.location.reload();
+}
+
+// Call saveState() after every state change (timer, score, period, penalties, settings, timeouts, theme)
+// Call loadState() on window.onload
+
+// Init
+window.onload = function () {
+  loadState();
+  updateTimerDisplay();
+  document.getElementById("periodValue").textContent = period;
+  document.getElementById("teamAScore").textContent = teamState.A.score;
+  document.getElementById("teamBScore").textContent = teamState.B.score;
+  document.getElementById("teamAShots").textContent = teamState.A.shots;
+  document.getElementById("teamBShots").textContent = teamState.B.shots;
+  renderPenalties("A");
+  renderPenalties("B");
+  renderTimeouts();
 };
