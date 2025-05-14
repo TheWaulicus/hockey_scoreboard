@@ -57,8 +57,9 @@ document.getElementById("timerDisplay").addEventListener("input", function (e) {
 });
 
 function changePeriod(delta) {
+  if (gamePhase !== "REG") return; // Only allow in regulation
   period = Math.max(1, period + delta);
-  document.getElementById("periodValue").textContent = period;
+  updatePhaseDisplay();
   saveStateToFirestore();
 }
 
