@@ -22,158 +22,98 @@ Usage:
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hockey Scoreboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap"
+      rel="stylesheet"
+    />
     <style>
       :root {
         --primary: #1a2236;
-        --accent: #00bcd4;
-        --bg: #f4f7fa;
+        --accent: #1da1f2;
+        --accent-dark: #177dc1;
+        --bg: linear-gradient(135deg, #f4f7fa 0%, #e3e9f4 100%);
         --text: #222;
         --panel: #fff;
         --border: #e0e0e0;
+        --shadow: 0 4px 24px #0002;
+        --neutral: #f5f7fa;
+        --danger: #e53935;
+        --warning: #fbc02d;
+        --alert: #fb8c00;
+      }
+      html,
+      body {
+        height: 100%;
       }
       body {
+        min-height: 100vh;
         background: var(--bg);
-        font-family: "Segoe UI", Arial, sans-serif;
+        font-family: "Inter", system-ui, Arial, sans-serif;
         margin: 0;
         padding: 0;
         color: var(--text);
+        box-sizing: border-box;
       }
       .scoreboard {
-        max-width: 900px;
-        margin: 2rem auto;
+        max-width: 1100px;
+        margin: 2.5rem auto;
         background: var(--panel);
-        border-radius: 16px;
-        box-shadow: 0 4px 24px #0001;
-        padding: 2rem 1rem 1.5rem 1rem;
+        border-radius: 24px;
+        box-shadow: var(--shadow);
+        padding: 2.5rem 1.5rem 2rem 1.5rem;
         border: 1px solid var(--border);
-      }
-      .league {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 1rem;
-        margin-bottom: 2rem;
-      }
-      .league-logo {
-        width: 60px;
-        height: 60px;
-        object-fit: contain;
-        border-radius: 8px;
-        background: #eee;
-        border: 1px solid var(--border);
-      }
-      .league-name {
-        font-size: 2rem;
-        font-weight: 700;
-        outline: none;
-        border: none;
-        background: transparent;
-        text-align: center;
-        min-width: 200px;
-      }
-      .teams {
-        display: flex;
-        justify-content: space-between;
-        gap: 2rem;
-      }
-      .team-panel {
-        flex: 1;
-        background: var(--bg);
-        border-radius: 12px;
-        padding: 1.5rem 1rem;
         display: flex;
         flex-direction: column;
-        align-items: center;
-        border: 1px solid var(--border);
-      }
-      .team-logo {
-        width: 80px;
-        height: 80px;
-        object-fit: contain;
-        border-radius: 8px;
-        background: #eee;
-        border: 1px solid var(--border);
-        margin-bottom: 1rem;
-      }
-      .team-name {
-        font-size: 1.5rem;
-        font-weight: 600;
-        outline: none;
-        border: none;
-        background: transparent;
-        text-align: center;
-        min-width: 120px;
-        margin-bottom: 1rem;
-      }
-      .score-row {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        margin-bottom: 1rem;
-      }
-      .score-label {
-        font-size: 1.1rem;
-        font-weight: 500;
-        min-width: 60px;
-      }
-      .score-value {
-        font-size: 2.5rem;
-        font-weight: 700;
-        width: 60px;
-        text-align: center;
-      }
-      .score-btn {
-        font-size: 1.5rem;
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        border: none;
-        background: var(--accent);
-        color: #fff;
-        cursor: pointer;
-        transition: background 0.2s;
-      }
-      .score-btn:active {
-        background: #0097a7;
-      }
-      @media (max-width: 700px) {
-        .teams {
-          flex-direction: column;
-          gap: 1.5rem;
-        }
-      }
-      .logo-upload {
-        margin-top: 0.5rem;
-        font-size: 0.9rem;
-        color: #666;
+        gap: 2.5rem;
       }
       .timer-block {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        margin-bottom: 2.5rem;
-        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+        margin-top: 0.2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1.5px solid var(--border);
       }
       .timer-main {
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.7rem;
       }
       .timer-display {
-        font-size: 4.5rem;
+        font-family: "Roboto Mono", "Menlo", "Consolas", monospace;
+        font-size: 5rem;
         font-weight: 900;
-        width: 220px;
+        width: 260px;
         text-align: center;
-        border: 3px solid var(--accent);
-        border-radius: 16px;
-        background: #fff;
-        color: var(--primary);
+        border: none;
+        border-radius: 18px;
+        background: #181f2a;
+        color: #eaf6ff;
         margin: 0 0.5rem 0 0.5rem;
-        transition: background 0.3s, color 0.3s;
-        letter-spacing: 0.1em;
-        box-shadow: 0 2px 12px #0001;
+        transition: background 0.3s, color 0.3s, box-shadow 0.2s;
+        letter-spacing: 0.12em;
+        box-shadow: 0 2px 24px #1da1f244, 0 1.5px 0 #1da1f2;
+        outline: none;
+        text-shadow: 0 0 8px #1da1f2cc, 0 2px 0 #0008;
+        caret-color: var(--accent);
+      }
+      .timer-warning {
+        background: #fffbe6 !important;
+        color: #b88600 !important;
+        text-shadow: none !important;
+      }
+      .timer-alert {
+        background: #fff3e0 !important;
+        color: #d84315 !important;
+        text-shadow: none !important;
+      }
+      .timer-danger {
+        background: #ffebee !important;
+        color: #b71c1c !important;
+        text-shadow: none !important;
       }
       .timer-controls {
         display: flex;
@@ -183,36 +123,201 @@ Usage:
         margin-bottom: 0.2rem;
       }
       .timer-btn {
-        font-size: 1.3rem;
-        padding: 0.5rem 1.5rem;
-        border-radius: 8px;
+        font-size: 1.2rem;
+        padding: 0.6rem 2.1rem;
+        border-radius: 999px;
         border: none;
         background: var(--accent);
         color: #fff;
         cursor: pointer;
         font-weight: 700;
-        transition: background 0.2s;
+        transition: background 0.18s, box-shadow 0.18s, transform 0.12s;
+        box-shadow: 0 2px 8px #1da1f222;
+        outline: none;
+        border-bottom: 2.5px solid var(--accent-dark);
       }
       .timer-btn:active {
-        background: #0097a7;
+        background: var(--accent-dark);
+        transform: scale(0.97);
+      }
+      .timer-btn:focus {
+        box-shadow: 0 0 0 2px #1da1f288;
       }
       .period-label {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
         font-weight: 600;
         margin: 0 0.2rem;
+        color: #222b;
       }
       .period-value {
         font-size: 1.7rem;
         font-weight: 800;
-        width: 40px;
+        width: 44px;
         text-align: center;
         margin: 0 0.2rem;
-        min-width: 40px;
+        min-width: 44px;
         display: inline-block;
+        color: var(--accent);
+        background: #f4f7fa;
+        border-radius: 8px;
+        box-shadow: 0 1px 4px #1da1f211;
       }
       .period-btn {
-        padding: 0.5rem 1rem;
-        font-size: 1.2rem;
+        padding: 0.6rem 1.2rem;
+        font-size: 1.1rem;
+      }
+      .league {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-bottom: 1.2rem;
+      }
+      .league-logo {
+        width: 70px;
+        height: 70px;
+        object-fit: contain;
+        border-radius: 12px;
+        background: #f3f6fa;
+        border: 1.5px solid var(--border);
+        box-shadow: 0 2px 8px #1da1f211;
+      }
+      .league-name {
+        font-size: 2.5rem;
+        font-weight: 900;
+        outline: none;
+        border: none;
+        background: transparent;
+        text-align: center;
+        min-width: 220px;
+        color: #1a2236;
+        letter-spacing: 0.01em;
+        border-radius: 8px;
+        padding: 0.2rem 0.5rem;
+        transition: background 0.2s;
+      }
+      .league-name:focus {
+        background: #e3e9f4;
+      }
+      .teams {
+        display: flex;
+        justify-content: space-between;
+        gap: 2.5rem;
+      }
+      .team-panel {
+        flex: 1;
+        background: var(--neutral);
+        border-radius: 18px;
+        padding: 2.2rem 1.2rem 1.7rem 1.2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: 1.5px solid var(--border);
+        box-shadow: 0 2px 16px #1da1f211;
+        min-width: 260px;
+      }
+      .team-logo {
+        width: 90px;
+        height: 90px;
+        object-fit: contain;
+        border-radius: 12px;
+        background: #f3f6fa;
+        border: 1.5px solid var(--border);
+        margin-bottom: 1.2rem;
+        box-shadow: 0 2px 8px #1da1f211;
+      }
+      .team-name {
+        font-size: 1.7rem;
+        font-weight: 800;
+        outline: none;
+        border: none;
+        background: transparent;
+        text-align: center;
+        min-width: 120px;
+        margin-bottom: 1.2rem;
+        color: #1a2236;
+        border-radius: 8px;
+        padding: 0.1rem 0.4rem;
+        transition: background 0.2s;
+      }
+      .team-name:focus {
+        background: #e3e9f4;
+      }
+      .score-row {
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+        margin-bottom: 1.2rem;
+      }
+      .score-label {
+        font-size: 1.1rem;
+        font-weight: 600;
+        min-width: 60px;
+        color: #222b;
+      }
+      .score-value {
+        font-size: 2.2rem;
+        font-weight: 900;
+        width: 60px;
+        text-align: center;
+        color: #1a2236;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 1px 4px #1da1f211;
+      }
+      .score-btn {
+        font-size: 1.5rem;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: none;
+        background: var(--accent);
+        color: #fff;
+        cursor: pointer;
+        font-weight: 700;
+        transition: background 0.18s, box-shadow 0.18s, transform 0.12s;
+        box-shadow: 0 2px 8px #1da1f222;
+        outline: none;
+        border-bottom: 2.5px solid var(--accent-dark);
+      }
+      .score-btn:active {
+        background: var(--accent-dark);
+        transform: scale(0.97);
+      }
+      .score-btn:focus {
+        box-shadow: 0 0 0 2px #1da1f288;
+      }
+      .logo-upload {
+        margin-top: 0.7rem;
+        font-size: 1rem;
+        color: #1da1f2;
+        background: #e3e9f4;
+        border: none;
+        border-radius: 999px;
+        padding: 0.4rem 1.2rem;
+        cursor: pointer;
+        font-weight: 600;
+        box-shadow: 0 1px 4px #1da1f211;
+        transition: background 0.18s, color 0.18s;
+      }
+      .logo-upload:active {
+        background: #d0d8e8;
+        color: #177dc1;
+      }
+      .logo-upload:focus {
+        box-shadow: 0 0 0 2px #1da1f288;
+      }
+      @media (max-width: 900px) {
+        .scoreboard {
+          padding: 1.2rem 0.2rem 1.2rem 0.2rem;
+        }
+        .teams {
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+        .team-panel {
+          min-width: 0;
+        }
       }
       @media (max-width: 700px) {
         .timer-display {
@@ -225,11 +330,211 @@ Usage:
         .timer-block {
           margin-bottom: 1.2rem;
         }
+        .league-name {
+          font-size: 1.3rem;
+          min-width: 100px;
+        }
+        .team-name {
+          font-size: 1.1rem;
+          min-width: 60px;
+        }
+        .team-logo,
+        .league-logo {
+          width: 48px;
+          height: 48px;
+        }
+        .score-value {
+          font-size: 1.2rem;
+          width: 36px;
+        }
+        .score-btn {
+          font-size: 1.1rem;
+          width: 32px;
+          height: 32px;
+        }
+        .timer-btn,
+        .logo-upload {
+          font-size: 0.9rem;
+          padding: 0.4rem 0.8rem;
+        }
+        .period-value {
+          font-size: 1.1rem;
+          width: 28px;
+          min-width: 28px;
+        }
+        .team-panel {
+          padding: 1.1rem 0.5rem 0.7rem 0.5rem;
+        }
+      }
+      .settings-open {
+        position: absolute;
+        top: 2.2rem;
+        right: 2.2rem;
+        background: #fff;
+        border: 1.5px solid var(--border);
+        border-radius: 50%;
+        box-shadow: 0 2px 8px #1da1f211;
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.18s, box-shadow 0.18s;
+        z-index: 10;
+      }
+      .settings-open:active {
+        background: #e3e9f4;
+      }
+      .settings-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(30, 40, 60, 0.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+      .settings-content {
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 8px 48px #1da1f244;
+        padding: 2.5rem 2.2rem 2rem 2.2rem;
+        min-width: 340px;
+        max-width: 95vw;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        position: relative;
+      }
+      .settings-close {
+        position: absolute;
+        top: 1.2rem;
+        right: 1.2rem;
+        background: none;
+        border: none;
+        font-size: 2.2rem;
+        color: #1a2236;
+        cursor: pointer;
+        font-weight: 700;
+        z-index: 10;
+      }
+      .settings-section {
+        margin-bottom: 1.7rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.7rem;
+      }
+      .settings-input {
+        font-size: 1.1rem;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        border: 1.5px solid var(--border);
+        background: #f4f7fa;
+        color: #1a2236;
+        font-family: inherit;
+        margin-bottom: 0.2rem;
+      }
+      .settings-file {
+        margin-top: 0.2rem;
+        margin-bottom: 0.2rem;
+      }
+      .settings-save {
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        border-radius: 999px;
+        padding: 0.7rem 2.2rem;
+        font-size: 1.2rem;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 2px 8px #1da1f222;
+        transition: background 0.18s, box-shadow 0.18s;
+      }
+      .settings-save:active {
+        background: var(--accent-dark);
+      }
+      @media (max-width: 700px) {
+        .settings-content {
+          padding: 1.2rem 0.7rem 1rem 0.7rem;
+          min-width: 0;
+        }
       }
     </style>
   </head>
   <body>
+    <div id="settingsModal" class="settings-modal" style="display: none">
+      <div class="settings-content">
+        <button class="settings-close" onclick="toggleSettings(false)">
+          &times;
+        </button>
+        <h2>Settings</h2>
+        <form
+          id="settingsForm"
+          onsubmit="event.preventDefault(); applySettings();"
+        >
+          <div class="settings-section">
+            <label for="leagueNameInput">League Name</label>
+            <input type="text" id="leagueNameInput" class="settings-input" />
+            <label>League Logo</label>
+            <input
+              type="file"
+              accept="image/*"
+              id="leagueLogoInput"
+              class="settings-file"
+            />
+          </div>
+          <div class="settings-section">
+            <label for="teamANameInput">Team A Name</label>
+            <input type="text" id="teamANameInput" class="settings-input" />
+            <label>Team A Logo</label>
+            <input
+              type="file"
+              accept="image/*"
+              id="teamALogoInput"
+              class="settings-file"
+            />
+          </div>
+          <div class="settings-section">
+            <label for="teamBNameInput">Team B Name</label>
+            <input type="text" id="teamBNameInput" class="settings-input" />
+            <label>Team B Logo</label>
+            <input
+              type="file"
+              accept="image/*"
+              id="teamBLogoInput"
+              class="settings-file"
+            />
+          </div>
+          <button type="submit" class="settings-save">Save</button>
+        </form>
+      </div>
+    </div>
     <div class="scoreboard">
+      <button
+        class="settings-open"
+        onclick="toggleSettings(true)"
+        title="Settings"
+      >
+        <svg
+          width="28"
+          height="28"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="3" />
+          <path
+            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 8 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 5 15.4a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 8a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 8 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09c0 .66.39 1.25 1 1.51a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 8c.66 0 1.25.39 1.51 1H21a2 2 0 0 1 0 4h-.09c-.66 0-1.25.39-1.51 1z"
+          />
+        </svg>
+      </button>
       <div class="timer-block">
         <div class="timer-controls">
           <button class="timer-btn period-btn" onclick="changePeriod(-1)">
@@ -257,30 +562,25 @@ Usage:
         </div>
       </div>
       <div class="league">
-        <img src="" alt="League Logo" class="league-logo" id="leagueLogo" />
-        <input
-          type="text"
-          class="league-name"
-          id="leagueName"
-          value="League Name"
+        <img
+          src=""
+          alt="League Logo"
+          class="league-logo"
+          id="leagueLogo"
+          onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'90\' height=\'90\' viewBox=\'0 0 90 90\'><rect width=\'90\' height=\'90\' rx=\'16\' fill=\'%23e3e9f4\'/><text x=\'50%\' y=\'54%\' text-anchor=\'middle\' font-size=\'38\' fill=\'%2399aabb\' font-family=\'Arial, sans-serif\' dy=\'.3em\'>?</text></svg>'"
         />
-        <input
-          type="file"
-          accept="image/*"
-          id="leagueLogoInput"
-          style="display: none"
-        />
-        <button
-          onclick="document.getElementById('leagueLogoInput').click()"
-          class="logo-upload"
-        >
-          Upload Logo
-        </button>
+        <span class="league-name" id="leagueName">League Name</span>
       </div>
       <div class="teams">
         <div class="team-panel" id="teamA">
-          <img src="" alt="Team A Logo" class="team-logo" id="teamALogo" />
-          <input type="text" class="team-name" id="teamAName" value="Team A" />
+          <img
+            src=""
+            alt="Team A Logo"
+            class="team-logo"
+            id="teamALogo"
+            onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'90\' height=\'90\' viewBox=\'0 0 90 90\'><rect width=\'90\' height=\'90\' rx=\'16\' fill=\'%23e3e9f4\'/><text x=\'50%\' y=\'54%\' text-anchor=\'middle\' font-size=\'38\' fill=\'%2399aabb\' font-family=\'Arial, sans-serif\' dy=\'.3em\'>?</text></svg>'"
+          />
+          <span class="team-name" id="teamAName">Team A</span>
           <input
             type="file"
             accept="image/*"
@@ -315,8 +615,14 @@ Usage:
           </div>
         </div>
         <div class="team-panel" id="teamB">
-          <img src="" alt="Team B Logo" class="team-logo" id="teamBLogo" />
-          <input type="text" class="team-name" id="teamBName" value="Team B" />
+          <img
+            src=""
+            alt="Team B Logo"
+            class="team-logo"
+            id="teamBLogo"
+            onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'90\' height=\'90\' viewBox=\'0 0 90 90\'><rect width=\'90\' height=\'90\' rx=\'16\' fill=\'%23e3e9f4\'/><text x=\'50%\' y=\'54%\' text-anchor=\'middle\' font-size=\'38\' fill=\'%2399aabb\' font-family=\'Arial, sans-serif\' dy=\'.3em\'>?</text></svg>'"
+          />
+          <span class="team-name" id="teamBName">Team B</span>
           <input
             type="file"
             accept="image/*"
@@ -394,13 +700,6 @@ Usage:
       handleLogoInput("leagueLogoInput", "leagueLogo");
       handleLogoInput("teamALogoInput", "teamALogo");
       handleLogoInput("teamBLogoInput", "teamBLogo");
-      // Set default placeholder logos
-      document.getElementById("leagueLogo").src =
-        "https://upload.wikimedia.org/wikipedia/commons/3/3a/Logo_placeholder.png";
-      document.getElementById("teamALogo").src =
-        "https://upload.wikimedia.org/wikipedia/commons/3/3a/Logo_placeholder.png";
-      document.getElementById("teamBLogo").src =
-        "https://upload.wikimedia.org/wikipedia/commons/3/3a/Logo_placeholder.png";
       // Timer logic with color, period, and overtime management
       let timer = 20 * 60;
       let timerInterval = null;
@@ -498,6 +797,46 @@ Usage:
       }
       // Init
       updateTimerDisplay();
+      // Settings modal logic
+      function toggleSettings(show) {
+        document.getElementById("settingsModal").style.display = show
+          ? "flex"
+          : "none";
+        if (show) {
+          // Populate settings fields with current values
+          document.getElementById("leagueNameInput").value =
+            document.getElementById("leagueName").textContent;
+          document.getElementById("teamANameInput").value =
+            document.getElementById("teamAName").textContent;
+          document.getElementById("teamBNameInput").value =
+            document.getElementById("teamBName").textContent;
+        }
+      }
+      // Apply settings from modal
+      function applySettings() {
+        document.getElementById("leagueName").textContent =
+          document.getElementById("leagueNameInput").value;
+        document.getElementById("teamAName").textContent =
+          document.getElementById("teamANameInput").value;
+        document.getElementById("teamBName").textContent =
+          document.getElementById("teamBNameInput").value;
+        // Handle logo uploads
+        function handleLogoInput(inputId, imgId) {
+          const input = document.getElementById(inputId);
+          const img = document.getElementById(imgId);
+          if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+              img.src = ev.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+          }
+        }
+        handleLogoInput("leagueLogoInput", "leagueLogo");
+        handleLogoInput("teamALogoInput", "teamALogo");
+        handleLogoInput("teamBLogoInput", "teamBLogo");
+        toggleSettings(false);
+      }
     </script>
   </body>
 </html>
