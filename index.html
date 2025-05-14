@@ -31,6 +31,8 @@ Usage:
       rel="stylesheet"
     />
     <link rel="stylesheet" href="scoreboard.css" />
+    <script src="https://www.gstatic.com/firebasejs/11.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore-compat.js"></script>
   </head>
   <body>
     <div id="settingsModal" class="settings-modal" style="display: none">
@@ -340,5 +342,18 @@ Usage:
       </div>
     </div>
     <script src="scoreboard.js"></script>
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyAChA1o__XYwyF8q6OGUzaBxVsLaYETh6Y",
+        authDomain: "hockey-6a8a9.firebaseapp.com",
+        projectId: "hockey-6a8a9",
+        storageBucket: "hockey-6a8a9.firebasestorage.app",
+        messagingSenderId: "585347610132",
+        appId: "1:585347610132:web:2aca00004d62646c629901",
+        measurementId: "G-HSMSS2GYNR",
+      };
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+    </script>
   </body>
 </html>
