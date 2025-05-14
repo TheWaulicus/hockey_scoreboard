@@ -341,7 +341,6 @@ Usage:
         </div>
       </div>
     </div>
-    <script src="scoreboard.js"></script>
     <script>
       const firebaseConfig = {
         apiKey: "AIzaSyAChA1o__XYwyF8q6OGUzaBxVsLaYETh6Y",
@@ -353,7 +352,8 @@ Usage:
         measurementId: "G-HSMSS2GYNR",
       };
       firebase.initializeApp(firebaseConfig);
-      const db = firebase.firestore();
+      db = firebase.firestore();
     </script>
+    <script src="scoreboard.js"></script>
   </body>
 </html>
