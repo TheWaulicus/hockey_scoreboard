@@ -121,6 +121,112 @@ Usage:
             Advance Phase
           </button>
         </div>
+        <div class="scoreboard-scores-row">
+          <div class="scoreboard-team-score">
+            <img
+              src=""
+              alt="Team A Logo"
+              class="scoreboard-team-logo-large"
+              id="teamALogo"
+              ...
+            />
+            <span class="scoreboard-team-name" id="teamAName">Team A</span>
+            <div class="scoreboard-score-row">
+              <button class="score-btn" onclick="updateScore('A', -1, 'score')">
+                -
+              </button>
+              <span class="score-value scoreboard-score-main" id="teamAScore"
+                >0</span
+              >
+              <button class="score-btn" onclick="updateScore('A', 1, 'score')">
+                +
+              </button>
+            </div>
+            <div class="scoreboard-shots-row">
+              <span class="score-label">Shots</span>
+              <div class="scoreboard-shots-controls">
+                <button class="score-btn">-</button>
+                <span class="score-value scoreboard-shots-main" id="teamAShots"
+                  >0</span
+                >
+                <button class="score-btn">+</button>
+              </div>
+            </div>
+            <div class="scoreboard-timeouts-row">
+              <span class="timeout-label">Timeouts</span>
+              <div class="scoreboard-timeouts-controls">
+                <button class="score-btn" onclick="changeTimeout('A', -1)">
+                  -
+                </button>
+                <span
+                  class="score-value scoreboard-timeouts-main"
+                  id="teamATimeouts"
+                  >0</span
+                >
+                <button class="score-btn" onclick="changeTimeout('A', 1)">
+                  +
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="scoreboard-league-row">
+            <img
+              src=""
+              alt="League Logo"
+              class="league-logo"
+              id="leagueLogo"
+              onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'90\' height=\'90\' viewBox=\'0 0 90 90\'><rect width=\'90\' height=\'90\' rx=\'16\' fill=\'%23e3e9f4\'/><text x=\'50%\' y=\'54%\' text-anchor=\'middle\' font-size=\'38\' fill=\'%2399aabb\' font-family=\'Arial, sans-serif\' dy=\'.3em\'>?</text></svg>'"
+            />
+            <span class="league-name" id="leagueName">League Name</span>
+          </div>
+          <div class="scoreboard-team-score">
+            <img
+              src=""
+              alt="Team B Logo"
+              class="scoreboard-team-logo-large"
+              id="teamBLogo"
+              ...
+            />
+            <span class="scoreboard-team-name" id="teamBName">Team B</span>
+            <div class="scoreboard-score-row">
+              <button class="score-btn" onclick="updateScore('B', -1, 'score')">
+                -
+              </button>
+              <span class="score-value scoreboard-score-main" id="teamBScore"
+                >0</span
+              >
+              <button class="score-btn" onclick="updateScore('B', 1, 'score')">
+                +
+              </button>
+            </div>
+            <div class="scoreboard-shots-row">
+              <span class="score-label">Shots</span>
+              <div class="scoreboard-shots-controls">
+                <button class="score-btn">-</button>
+                <span class="score-value scoreboard-shots-main" id="teamBShots"
+                  >0</span
+                >
+                <button class="score-btn">+</button>
+              </div>
+            </div>
+            <div class="scoreboard-timeouts-row">
+              <span class="timeout-label">Timeouts</span>
+              <div class="scoreboard-timeouts-controls">
+                <button class="score-btn" onclick="changeTimeout('B', -1)">
+                  -
+                </button>
+                <span
+                  class="score-value scoreboard-timeouts-main"
+                  id="teamBTimeouts"
+                  >0</span
+                >
+                <button class="score-btn" onclick="changeTimeout('B', 1)">
+                  +
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="timer-main">
           <div class="timer-outline">
             <input
@@ -139,70 +245,17 @@ Usage:
         </div>
         <div style="margin-top: 10px; text-align: center">
           <button
-            class="timer-btn"
-            style="
-              background: #ff2a2a;
-              color: #fff;
-              border: 2px solid #ff2a2a;
-              margin-top: 8px;
-            "
+            class="timer-btn reset-all-btn"
+            style="margin-top: 8px"
             onclick="resetAll()"
           >
             Reset All
           </button>
         </div>
       </div>
-      <div class="league-row">
-        <img
-          src=""
-          alt="League Logo"
-          class="league-logo"
-          id="leagueLogo"
-          onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'90\' height=\'90\' viewBox=\'0 0 90 90\'><rect width=\'90\' height=\'90\' rx=\'16\' fill=\'%23e3e9f4\'/><text x=\'50%\' y=\'54%\' text-anchor=\'middle\' font-size=\'38\' fill=\'%2399aabb\' font-family=\'Arial, sans-serif\' dy=\'.3em\'>?</text></svg>'"
-        />
-        <span class="league-name" id="leagueName">League Name</span>
-      </div>
       <div class="main-row">
-        <div class="team-pod" id="teamA">
-          <img
-            src=""
-            alt="Team A Logo"
-            class="team-logo"
-            id="teamALogo"
-            onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'90\' height=\'90\' viewBox=\'0 0 90 90\'><rect width=\'90\' height=\'90\' rx=\'16\' fill=\'%23e3e9f4\'/><text x=\'50%\' y=\'54%\' text-anchor=\'middle\' font-size=\'38\' fill=\'%2399aabb\' font-family=\'Arial, sans-serif\' dy=\'.3em\'>?</text></svg>'"
-          />
-          <span class="team-name" id="teamAName">Team A</span>
-          <div class="timeout-row">
-            <span class="timeout-label">Timeouts</span>
-            <button class="score-btn" onclick="changeTimeout('A', -1)">
-              -
-            </button>
-            <span class="score-value" id="teamATimeouts">1</span>
-            <button class="score-btn" onclick="changeTimeout('A', 1)">+</button>
-          </div>
-          <div class="score-row">
-            <span class="score-label">Score</span>
-            <button class="score-btn" onclick="updateScore('A', -1, 'score')">
-              -
-            </button>
-            <span class="score-value" id="teamAScore">0</span>
-            <button class="score-btn" onclick="updateScore('A', 1, 'score')">
-              +
-            </button>
-          </div>
-          <div class="score-row">
-            <span class="score-label">Shots</span>
-            <button class="score-btn" onclick="updateScore('A', -1, 'shots')">
-              -
-            </button>
-            <span class="score-value" id="teamAShots">0</span>
-            <button class="score-btn" onclick="updateScore('A', 1, 'shots')">
-              +
-            </button>
-          </div>
-        </div>
-        <div class="penalties-center">
-          <div class="penalties-team-group">
+        <div class="penalties-row">
+          <div class="penalties-team-group penalties-team-group-left">
             <div class="penalties-header">
               <span id="teamAPenaltiesHeader">Team A Penalties</span>
               <button class="penalty-add-btn" onclick="showPenaltyForm('A')">
@@ -251,7 +304,7 @@ Usage:
               </button>
             </form>
           </div>
-          <div class="penalties-team-group">
+          <div class="penalties-team-group penalties-team-group-right">
             <div class="penalties-header">
               <span id="teamBPenaltiesHeader">Team B Penalties</span>
               <button class="penalty-add-btn" onclick="showPenaltyForm('B')">
@@ -299,44 +352,6 @@ Usage:
                 Cancel
               </button>
             </form>
-          </div>
-        </div>
-        <div class="team-pod" id="teamB">
-          <img
-            src=""
-            alt="Team B Logo"
-            class="team-logo"
-            id="teamBLogo"
-            onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'90\' height=\'90\' viewBox=\'0 0 90 90\'><rect width=\'90\' height=\'90\' rx=\'16\' fill=\'%23e3e9f4\'/><text x=\'50%\' y=\'54%\' text-anchor=\'middle\' font-size=\'38\' fill=\'%2399aabb\' font-family=\'Arial, sans-serif\' dy=\'.3em\'>?</text></svg>'"
-          />
-          <span class="team-name" id="teamBName">Team B</span>
-          <div class="timeout-row">
-            <span class="timeout-label">Timeouts</span>
-            <button class="score-btn" onclick="changeTimeout('B', -1)">
-              -
-            </button>
-            <span class="score-value" id="teamBTimeouts">1</span>
-            <button class="score-btn" onclick="changeTimeout('B', 1)">+</button>
-          </div>
-          <div class="score-row">
-            <span class="score-label">Score</span>
-            <button class="score-btn" onclick="updateScore('B', -1, 'score')">
-              -
-            </button>
-            <span class="score-value" id="teamBScore">0</span>
-            <button class="score-btn" onclick="updateScore('B', 1, 'score')">
-              +
-            </button>
-          </div>
-          <div class="score-row">
-            <span class="score-label">Shots</span>
-            <button class="score-btn" onclick="updateScore('B', -1, 'shots')">
-              -
-            </button>
-            <span class="score-value" id="teamBShots">0</span>
-            <button class="score-btn" onclick="updateScore('B', 1, 'shots')">
-              +
-            </button>
           </div>
         </div>
       </div>

@@ -30,3 +30,10 @@ A modern, responsive hockey scoreboard web app. No dependencies—just open in y
 - Modular, maintainable, and scalable code.
 - No hardcoded values; all UI text and state are dynamic.
 - Follows best practices for HTML, CSS, and JS separation.
+
+- Shots and timeouts controls for each team now have their label above, and the - number + controls in a horizontal row below, for improved vertical alignment and clarity.
+
+- Team logo images are now larger for better visibility: 140x140px on desktop, 90x90px on mobile.
+
+- The bottom team pods have been removed for a cleaner layout.
+- The main team logos in the scoreboard are now much larger (220x220px desktop, 120x120px mobile).
