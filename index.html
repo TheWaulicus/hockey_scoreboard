@@ -1,0 +1,308 @@
+<!--
+Hockey Scoreboard (Static HTML/JS/CSS)
+
+Features:
+- Scoring for both teams
+- Shots on goal for both teams
+- Editable team names and league name
+- Uploadable team and league logos
+- Responsive, clean UI
+- No dependencies, just open in your browser
+- Penalties per team: add player number, timer, start/stop/remove, multiple per team
+- **Grid-based layout using CSS Grid for robust alignment**
+- **Now split into separate HTML, CSS, and JS files for maintainability**
+
+Usage:
+1. Open this file in any modern web browser.
+2. Edit the league name and team names by clicking and typing.
+3. Upload logos for the league and each team using the "Upload Logo" buttons.
+4. Use the + and - buttons to increment/decrement scores and shots for each team.
+5. Add penalties for each team, set player number and minutes, and control timers.
+6. All changes are in-memory (refreshing resets the scoreboard).
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hockey Scoreboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="scoreboard.css" />
+  </head>
+  <body>
+    <div id="settingsModal" class="settings-modal" style="display: none">
+      <div class="settings-content">
+        <button class="settings-close" onclick="toggleSettings(false)">
+          &times;
+        </button>
+        <h2>Settings</h2>
+        <form
+          id="settingsForm"
+          onsubmit="event.preventDefault(); applySettings();"
+        >
+          <div class="settings-section">
+            <label for="leagueNameInput">League Name</label>
+            <input type="text" id="leagueNameInput" class="settings-input" />
+            <label>League Logo</label>
+            <input
+              type="file"
+              accept="image/*"
+              id="leagueLogoInput"
+              class="settings-file"
+            />
+          </div>
+          <div class="settings-section">
+            <label for="teamANameInput">Team A Name</label>
+            <input type="text" id="teamANameInput" class="settings-input" />
+            <label>Team A Logo</label>
+            <input
+              type="file"
+              accept="image/*"
+              id="teamALogoInput"
+              class="settings-file"
+            />
+          </div>
+          <div class="settings-section">
+            <label for="teamBNameInput">Team B Name</label>
+            <input type="text" id="teamBNameInput" class="settings-input" />
+            <label>Team B Logo</label>
+            <input
+              type="file"
+              accept="image/*"
+              id="teamBLogoInput"
+              class="settings-file"
+            />
+          </div>
+          <button type="submit" class="settings-save">Save</button>
+        </form>
+      </div>
+    </div>
+    <div class="scoreboard">
+      <button
+        class="settings-open"
+        onclick="toggleSettings(true)"
+        title="Settings"
+      >
+        <svg
+          width="28"
+          height="28"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <circle cx="12" cy="12" r="3" />
+          <path
+            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 8 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 5 15.4a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 8a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 8 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09c0 .66.39 1.25 1 1.51a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 8c.66 0 1.25.39 1.51 1H21a2 2 0 0 1 0 4h-.09c-.66 0-1.25.39-1.51 1z"
+          />
+        </svg>
+      </button>
+      <div class="timer-block">
+        <div class="timer-controls">
+          <button class="timer-btn period-btn" onclick="changePeriod(-1)">
+            -
+          </button>
+          <span class="period-label">Period</span>
+          <span class="period-value" id="periodValue">1</span>
+          <button class="timer-btn period-btn" onclick="changePeriod(1)">
+            +
+          </button>
+        </div>
+        <div class="timer-main">
+          <div class="timer-outline">
+            <input
+              type="text"
+              id="timerDisplay"
+              class="timer-display"
+              value="20:00"
+              maxlength="5"
+            />
+          </div>
+        </div>
+        <div class="timer-controls">
+          <button class="timer-btn" onclick="startTimer()">Start</button>
+          <button class="timer-btn" onclick="stopTimer()">Stop</button>
+          <button class="timer-btn" onclick="resetTimer()">Reset</button>
+        </div>
+      </div>
+      <div class="league-row">
+        <img
+          src=""
+          alt="League Logo"
+          class="league-logo"
+          id="leagueLogo"
+          onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'90\' height=\'90\' viewBox=\'0 0 90 90\'><rect width=\'90\' height=\'90\' rx=\'16\' fill=\'%23e3e9f4\'/><text x=\'50%\' y=\'54%\' text-anchor=\'middle\' font-size=\'38\' fill=\'%2399aabb\' font-family=\'Arial, sans-serif\' dy=\'.3em\'>?</text></svg>'"
+        />
+        <span class="league-name" id="leagueName">League Name</span>
+      </div>
+      <div class="main-row">
+        <div class="team-pod" id="teamA">
+          <img
+            src=""
+            alt="Team A Logo"
+            class="team-logo"
+            id="teamALogo"
+            onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'90\' height=\'90\' viewBox=\'0 0 90 90\'><rect width=\'90\' height=\'90\' rx=\'16\' fill=\'%23e3e9f4\'/><text x=\'50%\' y=\'54%\' text-anchor=\'middle\' font-size=\'38\' fill=\'%2399aabb\' font-family=\'Arial, sans-serif\' dy=\'.3em\'>?</text></svg>'"
+          />
+          <span class="team-name" id="teamAName">Team A</span>
+          <div class="score-row">
+            <span class="score-label">Score</span>
+            <button class="score-btn" onclick="updateScore('A', -1, 'score')">
+              -
+            </button>
+            <span class="score-value" id="teamAScore">0</span>
+            <button class="score-btn" onclick="updateScore('A', 1, 'score')">
+              +
+            </button>
+          </div>
+          <div class="score-row">
+            <span class="score-label">Shots</span>
+            <button class="score-btn" onclick="updateScore('A', -1, 'shots')">
+              -
+            </button>
+            <span class="score-value" id="teamAShots">0</span>
+            <button class="score-btn" onclick="updateScore('A', 1, 'shots')">
+              +
+            </button>
+          </div>
+        </div>
+        <div class="penalties-center">
+          <div class="penalties-team-group">
+            <div class="penalties-header">
+              <span id="teamAPenaltiesHeader">Team A Penalties</span>
+              <button class="penalty-add-btn" onclick="showPenaltyForm('A')">
+                <span>+</span><span class="penalty-add-btn-label">Add</span>
+              </button>
+            </div>
+            <div id="teamAPenalties"></div>
+            <form
+              id="teamAPenaltyForm"
+              class="penalty-form"
+              style="display: none"
+              onsubmit="event.preventDefault(); addPenalty('A');"
+            >
+              <input
+                type="number"
+                min="1"
+                max="99"
+                id="teamAPenaltyNumber"
+                class="penalty-input"
+                placeholder="Player #"
+                required
+              />
+              <input
+                type="number"
+                min="1"
+                max="10"
+                id="teamAPenaltyMinutes"
+                class="penalty-input"
+                placeholder="Min"
+                required
+              />
+              <input
+                type="text"
+                id="teamAPenaltyReason"
+                class="penalty-input penalty-reason-input"
+                placeholder="Reason (optional)"
+                maxlength="32"
+              />
+              <button type="submit" class="penalty-save-btn">Add</button>
+              <button
+                type="button"
+                class="penalty-cancel-btn"
+                onclick="hidePenaltyForm('A')"
+              >
+                Cancel
+              </button>
+            </form>
+          </div>
+          <div class="penalties-team-group">
+            <div class="penalties-header">
+              <span id="teamBPenaltiesHeader">Team B Penalties</span>
+              <button class="penalty-add-btn" onclick="showPenaltyForm('B')">
+                <span>+</span><span class="penalty-add-btn-label">Add</span>
+              </button>
+            </div>
+            <div id="teamBPenalties"></div>
+            <form
+              id="teamBPenaltyForm"
+              class="penalty-form"
+              style="display: none"
+              onsubmit="event.preventDefault(); addPenalty('B');"
+            >
+              <input
+                type="number"
+                min="1"
+                max="99"
+                id="teamBPenaltyNumber"
+                class="penalty-input"
+                placeholder="Player #"
+                required
+              />
+              <input
+                type="number"
+                min="1"
+                max="10"
+                id="teamBPenaltyMinutes"
+                class="penalty-input"
+                placeholder="Min"
+                required
+              />
+              <input
+                type="text"
+                id="teamBPenaltyReason"
+                class="penalty-input penalty-reason-input"
+                placeholder="Reason (optional)"
+                maxlength="32"
+              />
+              <button type="submit" class="penalty-save-btn">Add</button>
+              <button
+                type="button"
+                class="penalty-cancel-btn"
+                onclick="hidePenaltyForm('B')"
+              >
+                Cancel
+              </button>
+            </form>
+          </div>
+        </div>
+        <div class="team-pod" id="teamB">
+          <img
+            src=""
+            alt="Team B Logo"
+            class="team-logo"
+            id="teamBLogo"
+            onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'90\' height=\'90\' viewBox=\'0 0 90 90\'><rect width=\'90\' height=\'90\' rx=\'16\' fill=\'%23e3e9f4\'/><text x=\'50%\' y=\'54%\' text-anchor=\'middle\' font-size=\'38\' fill=\'%2399aabb\' font-family=\'Arial, sans-serif\' dy=\'.3em\'>?</text></svg>'"
+          />
+          <span class="team-name" id="teamBName">Team B</span>
+          <div class="score-row">
+            <span class="score-label">Score</span>
+            <button class="score-btn" onclick="updateScore('B', -1, 'score')">
+              -
+            </button>
+            <span class="score-value" id="teamBScore">0</span>
+            <button class="score-btn" onclick="updateScore('B', 1, 'score')">
+              +
+            </button>
+          </div>
+          <div class="score-row">
+            <span class="score-label">Shots</span>
+            <button class="score-btn" onclick="updateScore('B', -1, 'shots')">
+              -
+            </button>
+            <span class="score-value" id="teamBShots">0</span>
+            <button class="score-btn" onclick="updateScore('B', 1, 'shots')">
+              +
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="scoreboard.js"></script>
+  </body>
+</html>
