@@ -263,3 +263,18 @@ window.onload = function () {
   renderPenalties("B");
   renderTimeouts();
 };
+
+// --- Timeout Tracking ---
+window.timeouts = window.timeouts || { A: 0, B: 0 };
+
+function renderTimeouts() {
+  document.getElementById("teamATimeouts").textContent = window.timeouts.A;
+  document.getElementById("teamBTimeouts").textContent = window.timeouts.B;
+}
+
+function changeTimeout(team, delta) {
+  if (!["A", "B"].includes(team)) return;
+  window.timeouts[team] = Math.max(0, window.timeouts[team] + delta);
+  renderTimeouts();
+  saveState();
+}

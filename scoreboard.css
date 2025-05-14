@@ -444,3 +444,19 @@ body {
     gap: 8px;
   }
 }
+
+.timeout-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+  justify-content: center;
+}
+
+.timeout-label {
+  font-size: 1em;
+  color: #0af2ff;
+  min-width: 64px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}

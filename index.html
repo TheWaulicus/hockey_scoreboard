@@ -170,6 +170,14 @@ Usage:
             onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'90\' height=\'90\' viewBox=\'0 0 90 90\'><rect width=\'90\' height=\'90\' rx=\'16\' fill=\'%23e3e9f4\'/><text x=\'50%\' y=\'54%\' text-anchor=\'middle\' font-size=\'38\' fill=\'%2399aabb\' font-family=\'Arial, sans-serif\' dy=\'.3em\'>?</text></svg>'"
           />
           <span class="team-name" id="teamAName">Team A</span>
+          <div class="timeout-row">
+            <span class="timeout-label">Timeouts</span>
+            <button class="score-btn" onclick="changeTimeout('A', -1)">
+              -
+            </button>
+            <span class="score-value" id="teamATimeouts">1</span>
+            <button class="score-btn" onclick="changeTimeout('A', 1)">+</button>
+          </div>
           <div class="score-row">
             <span class="score-label">Score</span>
             <button class="score-btn" onclick="updateScore('A', -1, 'score')">
@@ -300,6 +308,14 @@ Usage:
             onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'90\' height=\'90\' viewBox=\'0 0 90 90\'><rect width=\'90\' height=\'90\' rx=\'16\' fill=\'%23e3e9f4\'/><text x=\'50%\' y=\'54%\' text-anchor=\'middle\' font-size=\'38\' fill=\'%2399aabb\' font-family=\'Arial, sans-serif\' dy=\'.3em\'>?</text></svg>'"
           />
           <span class="team-name" id="teamBName">Team B</span>
+          <div class="timeout-row">
+            <span class="timeout-label">Timeouts</span>
+            <button class="score-btn" onclick="changeTimeout('B', -1)">
+              -
+            </button>
+            <span class="score-value" id="teamBTimeouts">1</span>
+            <button class="score-btn" onclick="changeTimeout('B', 1)">+</button>
+          </div>
           <div class="score-row">
             <span class="score-label">Score</span>
             <button class="score-btn" onclick="updateScore('B', -1, 'score')">
