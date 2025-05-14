@@ -107,10 +107,16 @@ Usage:
           <button class="timer-btn period-btn" onclick="changePeriod(-1)">
             -
           </button>
-          <span class="period-label">Period</span>
-          <span class="period-value" id="periodValue">1</span>
+          <span class="period-label" id="periodLabel">Period 1</span>
           <button class="timer-btn period-btn" onclick="changePeriod(1)">
             +
+          </button>
+          <button
+            class="timer-btn period-btn"
+            style="margin-left: 16px"
+            onclick="advancePhase()"
+          >
+            Advance Phase
           </button>
         </div>
         <div class="timer-main">

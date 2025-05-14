@@ -6,6 +6,10 @@ let timerSeconds = 20 * 60;
 let timerRunning = false;
 let period = 1;
 
+// --- Overtime & Shootout Support ---
+let gamePhase = "REG"; // 'REG', 'OT', 'SO'
+const REGULATION_PERIODS = 3;
+
 function updateTimerDisplay() {
   const min = String(Math.floor(timerSeconds / 60)).padStart(2, "0");
   const sec = String(timerSeconds % 60).padStart(2, "0");
@@ -158,6 +162,37 @@ function removePenalty(team, idx) {
 // --- Persistence ---
 const STORAGE_KEY = "hockeyScoreboardState";
 
+function updatePhaseDisplay() {
+  let label = "";
+  if (gamePhase === "REG") label = `Period ${period}`;
+  else if (gamePhase === "OT") label = "Overtime";
+  else if (gamePhase === "SO") label = "Shootout";
+  document.getElementById("periodLabel").textContent = label;
+}
+
+function advancePhase() {
+  if (gamePhase === "REG" && period < REGULATION_PERIODS) {
+    changePeriod(1);
+  } else if (gamePhase === "REG" && period === REGULATION_PERIODS) {
+    gamePhase = "OT";
+    period = "OT";
+    updatePhaseDisplay();
+    saveState();
+  } else if (gamePhase === "OT") {
+    gamePhase = "SO";
+    period = "SO";
+    updatePhaseDisplay();
+    saveState();
+  }
+}
+
+function resetPhase() {
+  gamePhase = "REG";
+  period = 1;
+  updatePhaseDisplay();
+  saveState();
+}
+
 function saveState() {
   const state = {
     timerSeconds,
@@ -172,6 +207,7 @@ function saveState() {
     teamBLogo: document.getElementById("teamBLogo").src,
     timeouts: window.timeouts || { A: 0, B: 0 },
     theme: document.body.dataset.theme || "dark",
+    gamePhase,
   };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
@@ -193,8 +229,9 @@ function loadState() {
   document.getElementById("teamBLogo").src = state.teamBLogo;
   window.timeouts = state.timeouts;
   document.body.dataset.theme = state.theme;
+  gamePhase = state.gamePhase || "REG";
   updateTimerDisplay();
-  document.getElementById("periodValue").textContent = period;
+  updatePhaseDisplay();
   document.getElementById("teamAScore").textContent = teamState.A.score;
   document.getElementById("teamBScore").textContent = teamState.B.score;
   document.getElementById("teamAShots").textContent = teamState.A.shots;
