@@ -269,8 +269,9 @@ SCOREBOARD_DOC.onSnapshot((doc) => {
 });
 
 function resetAll() {
-  localStorage.removeItem(STORAGE_KEY);
-  window.location.reload();
+  SCOREBOARD_DOC.delete().then(() => {
+    window.location.reload();
+  });
 }
 
 // Call saveStateToFirestore() after every state change (timer, score, period, penalties, settings, timeouts, theme)
