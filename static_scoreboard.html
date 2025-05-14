@@ -28,15 +28,16 @@ Usage:
     />
     <style>
       :root {
-        --primary: #1a2236;
+        --primary: #181f2a;
         --accent: #1da1f2;
         --accent-dark: #177dc1;
-        --bg: linear-gradient(135deg, #f4f7fa 0%, #e3e9f4 100%);
-        --text: #222;
-        --panel: #fff;
-        --border: #e0e0e0;
-        --shadow: 0 4px 24px #0002;
-        --neutral: #f5f7fa;
+        --bg: linear-gradient(135deg, #232b3a 0%, #181f2a 100%);
+        --text: #fff;
+        --score-glow: 0 0 12px #1da1f2cc, 0 2px 0 #0008;
+        --timer-glow: 0 0 18px #1da1f2cc, 0 2px 0 #0008;
+        --border: #1da1f2;
+        --shadow: 0 8px 48px #1da1f244;
+        --neutral: #232b3a;
         --danger: #e53935;
         --warning: #fbc02d;
         --alert: #fb8c00;
@@ -57,14 +58,15 @@ Usage:
       .scoreboard {
         max-width: 1100px;
         margin: 2.5rem auto;
-        background: var(--panel);
-        border-radius: 24px;
+        background: var(--primary);
+        border-radius: 32px;
         box-shadow: var(--shadow);
+        border: 4px solid var(--border);
         padding: 2.5rem 1.5rem 2rem 1.5rem;
-        border: 1px solid var(--border);
         display: flex;
         flex-direction: column;
         gap: 2.5rem;
+        position: relative;
       }
       .timer-block {
         display: flex;
@@ -74,7 +76,7 @@ Usage:
         margin-bottom: 0.5rem;
         margin-top: 0.2rem;
         padding-bottom: 1.5rem;
-        border-bottom: 1.5px solid var(--border);
+        border-bottom: 2px solid #22304a;
       }
       .timer-main {
         display: flex;
@@ -90,29 +92,29 @@ Usage:
         text-align: center;
         border: none;
         border-radius: 18px;
-        background: #181f2a;
-        color: #eaf6ff;
+        background: #10151e;
+        color: #fff;
         margin: 0 0.5rem 0 0.5rem;
         transition: background 0.3s, color 0.3s, box-shadow 0.2s;
         letter-spacing: 0.12em;
-        box-shadow: 0 2px 24px #1da1f244, 0 1.5px 0 #1da1f2;
+        box-shadow: var(--timer-glow);
         outline: none;
-        text-shadow: 0 0 8px #1da1f2cc, 0 2px 0 #0008;
+        text-shadow: var(--timer-glow);
         caret-color: var(--accent);
       }
       .timer-warning {
-        background: #fffbe6 !important;
-        color: #b88600 !important;
+        background: #232b3a !important;
+        color: #fbc02d !important;
         text-shadow: none !important;
       }
       .timer-alert {
-        background: #fff3e0 !important;
-        color: #d84315 !important;
+        background: #232b3a !important;
+        color: #fb8c00 !important;
         text-shadow: none !important;
       }
       .timer-danger {
-        background: #ffebee !important;
-        color: #b71c1c !important;
+        background: #232b3a !important;
+        color: #e53935 !important;
         text-shadow: none !important;
       }
       .timer-controls {
@@ -147,7 +149,7 @@ Usage:
         font-size: 1.2rem;
         font-weight: 600;
         margin: 0 0.2rem;
-        color: #222b;
+        color: #fff;
       }
       .period-value {
         font-size: 1.7rem;
@@ -158,7 +160,7 @@ Usage:
         min-width: 44px;
         display: inline-block;
         color: var(--accent);
-        background: #f4f7fa;
+        background: #232b3a;
         border-radius: 8px;
         box-shadow: 0 1px 4px #1da1f211;
       }
@@ -166,82 +168,42 @@ Usage:
         padding: 0.6rem 1.2rem;
         font-size: 1.1rem;
       }
-      .league {
+      .main-row {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 1.5rem;
-        margin-bottom: 1.2rem;
-      }
-      .league-logo {
-        width: 70px;
-        height: 70px;
-        object-fit: contain;
-        border-radius: 12px;
-        background: #f3f6fa;
-        border: 1.5px solid var(--border);
-        box-shadow: 0 2px 8px #1da1f211;
-      }
-      .league-name {
-        font-size: 2.5rem;
-        font-weight: 900;
-        outline: none;
-        border: none;
-        background: transparent;
-        text-align: center;
-        min-width: 220px;
-        color: #1a2236;
-        letter-spacing: 0.01em;
-        border-radius: 8px;
-        padding: 0.2rem 0.5rem;
-        transition: background 0.2s;
-      }
-      .league-name:focus {
-        background: #e3e9f4;
-      }
-      .teams {
-        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
         justify-content: space-between;
         gap: 2.5rem;
+        margin-top: 1.5rem;
       }
-      .team-panel {
+      .team-pod {
         flex: 1;
-        background: var(--neutral);
-        border-radius: 18px;
-        padding: 2.2rem 1.2rem 1.7rem 1.2rem;
         display: flex;
         flex-direction: column;
         align-items: center;
-        border: 1.5px solid var(--border);
-        box-shadow: 0 2px 16px #1da1f211;
-        min-width: 260px;
+        justify-content: flex-start;
+        min-width: 220px;
+        max-width: 320px;
+        margin: 0 1rem;
       }
       .team-logo {
         width: 90px;
         height: 90px;
         object-fit: contain;
-        border-radius: 12px;
-        background: #f3f6fa;
-        border: 1.5px solid var(--border);
+        border-radius: 16px;
+        background: #232b3a;
+        border: 2.5px solid #2a3a5a;
         margin-bottom: 1.2rem;
         box-shadow: 0 2px 8px #1da1f211;
       }
       .team-name {
-        font-size: 1.7rem;
-        font-weight: 800;
-        outline: none;
-        border: none;
-        background: transparent;
-        text-align: center;
-        min-width: 120px;
+        font-size: 2rem;
+        font-weight: 900;
+        color: #fff;
         margin-bottom: 1.2rem;
-        color: #1a2236;
-        border-radius: 8px;
-        padding: 0.1rem 0.4rem;
-        transition: background 0.2s;
-      }
-      .team-name:focus {
-        background: #e3e9f4;
+        letter-spacing: 0.01em;
+        text-align: center;
+        text-shadow: 0 2px 8px #0008;
       }
       .score-row {
         display: flex;
@@ -253,17 +215,19 @@ Usage:
         font-size: 1.1rem;
         font-weight: 600;
         min-width: 60px;
-        color: #222b;
+        color: #fff;
       }
       .score-value {
-        font-size: 2.2rem;
+        font-size: 3.2rem;
         font-weight: 900;
-        width: 60px;
+        width: 70px;
         text-align: center;
-        color: #1a2236;
-        background: #fff;
+        color: #fff;
+        background: #10151e;
         border-radius: 8px;
-        box-shadow: 0 1px 4px #1da1f211;
+        box-shadow: var(--score-glow);
+        border: none;
+        text-shadow: var(--score-glow);
       }
       .score-btn {
         font-size: 1.5rem;
@@ -287,36 +251,41 @@ Usage:
       .score-btn:focus {
         box-shadow: 0 0 0 2px #1da1f288;
       }
-      .logo-upload {
-        margin-top: 0.7rem;
-        font-size: 1rem;
-        color: #1da1f2;
-        background: #e3e9f4;
-        border: none;
-        border-radius: 999px;
-        padding: 0.4rem 1.2rem;
-        cursor: pointer;
-        font-weight: 600;
-        box-shadow: 0 1px 4px #1da1f211;
-        transition: background 0.18s, color 0.18s;
+      .league-row {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 0.5rem;
       }
-      .logo-upload:active {
-        background: #d0d8e8;
-        color: #177dc1;
+      .league-logo {
+        width: 70px;
+        height: 70px;
+        object-fit: contain;
+        border-radius: 12px;
+        background: #232b3a;
+        border: 2.5px solid #2a3a5a;
+        box-shadow: 0 2px 8px #1da1f211;
+        margin-bottom: 0.7rem;
       }
-      .logo-upload:focus {
-        box-shadow: 0 0 0 2px #1da1f288;
+      .league-name {
+        font-size: 2.3rem;
+        font-weight: 900;
+        color: #fff;
+        letter-spacing: 0.01em;
+        text-align: center;
+        text-shadow: 0 2px 8px #0008;
       }
       @media (max-width: 900px) {
         .scoreboard {
           padding: 1.2rem 0.2rem 1.2rem 0.2rem;
         }
-        .teams {
+        .main-row {
           flex-direction: column;
           gap: 1.5rem;
         }
-        .team-panel {
+        .team-pod {
           min-width: 0;
+          max-width: 100%;
         }
       }
       @media (max-width: 700px) {
@@ -332,11 +301,9 @@ Usage:
         }
         .league-name {
           font-size: 1.3rem;
-          min-width: 100px;
         }
         .team-name {
           font-size: 1.1rem;
-          min-width: 60px;
         }
         .team-logo,
         .league-logo {
@@ -344,7 +311,7 @@ Usage:
           height: 48px;
         }
         .score-value {
-          font-size: 1.2rem;
+          font-size: 1.7rem;
           width: 36px;
         }
         .score-btn {
@@ -352,8 +319,7 @@ Usage:
           width: 32px;
           height: 32px;
         }
-        .timer-btn,
-        .logo-upload {
+        .timer-btn {
           font-size: 0.9rem;
           padding: 0.4rem 0.8rem;
         }
@@ -362,20 +328,20 @@ Usage:
           width: 28px;
           min-width: 28px;
         }
-        .team-panel {
-          padding: 1.1rem 0.5rem 0.7rem 0.5rem;
+        .team-pod {
+          padding: 0.5rem 0.2rem 0.5rem 0.2rem;
         }
       }
       .settings-open {
         position: absolute;
-        top: 2.2rem;
-        right: 2.2rem;
-        background: #fff;
-        border: 1.5px solid var(--border);
+        top: 1.2rem;
+        right: 1.2rem;
+        background: #232b3a;
+        border: 2px solid var(--border);
         border-radius: 50%;
         box-shadow: 0 2px 8px #1da1f211;
-        width: 48px;
-        height: 48px;
+        width: 44px;
+        height: 44px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -384,7 +350,7 @@ Usage:
         z-index: 10;
       }
       .settings-open:active {
-        background: #e3e9f4;
+        background: #1a2236;
       }
       .settings-modal {
         position: fixed;
@@ -409,6 +375,7 @@ Usage:
         flex-direction: column;
         align-items: flex-start;
         position: relative;
+        color: #1a2236;
       }
       .settings-close {
         position: absolute;
@@ -561,7 +528,7 @@ Usage:
           <button class="timer-btn" onclick="resetTimer()">Reset</button>
         </div>
       </div>
-      <div class="league">
+      <div class="league-row">
         <img
           src=""
           alt="League Logo"
@@ -571,8 +538,8 @@ Usage:
         />
         <span class="league-name" id="leagueName">League Name</span>
       </div>
-      <div class="teams">
-        <div class="team-panel" id="teamA">
+      <div class="main-row">
+        <div class="team-pod" id="teamA">
           <img
             src=""
             alt="Team A Logo"
@@ -581,12 +548,6 @@ Usage:
             onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'90\' height=\'90\' viewBox=\'0 0 90 90\'><rect width=\'90\' height=\'90\' rx=\'16\' fill=\'%23e3e9f4\'/><text x=\'50%\' y=\'54%\' text-anchor=\'middle\' font-size=\'38\' fill=\'%2399aabb\' font-family=\'Arial, sans-serif\' dy=\'.3em\'>?</text></svg>'"
           />
           <span class="team-name" id="teamAName">Team A</span>
-          <input
-            type="file"
-            accept="image/*"
-            id="teamALogoInput"
-            style="display: none"
-          />
           <div class="score-row">
             <span class="score-label">Score</span>
             <button class="score-btn" onclick="updateScore('A', -1, 'score')">
@@ -608,7 +569,7 @@ Usage:
             </button>
           </div>
         </div>
-        <div class="team-panel" id="teamB">
+        <div class="team-pod" id="teamB">
           <img
             src=""
             alt="Team B Logo"
@@ -617,12 +578,6 @@ Usage:
             onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'90\' height=\'90\' viewBox=\'0 0 90 90\'><rect width=\'90\' height=\'90\' rx=\'16\' fill=\'%23e3e9f4\'/><text x=\'50%\' y=\'54%\' text-anchor=\'middle\' font-size=\'38\' fill=\'%2399aabb\' font-family=\'Arial, sans-serif\' dy=\'.3em\'>?</text></svg>'"
           />
           <span class="team-name" id="teamBName">Team B</span>
-          <input
-            type="file"
-            accept="image/*"
-            id="teamBLogoInput"
-            style="display: none"
-          />
           <div class="score-row">
             <span class="score-label">Score</span>
             <button class="score-btn" onclick="updateScore('B', -1, 'score')">
