@@ -1,0 +1,503 @@
+<!--
+Hockey Scoreboard (Static HTML/JS/CSS)
+
+Features:
+- Scoring for both teams
+- Shots on goal for both teams
+- Editable team names and league name
+- Uploadable team and league logos
+- Responsive, clean UI
+- No dependencies, just open in your browser
+
+Usage:
+1. Open this file in any modern web browser.
+2. Edit the league name and team names by clicking and typing.
+3. Upload logos for the league and each team using the "Upload Logo" buttons.
+4. Use the + and - buttons to increment/decrement scores and shots for each team.
+5. All changes are in-memory (refreshing resets the scoreboard).
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hockey Scoreboard</title>
+    <style>
+      :root {
+        --primary: #1a2236;
+        --accent: #00bcd4;
+        --bg: #f4f7fa;
+        --text: #222;
+        --panel: #fff;
+        --border: #e0e0e0;
+      }
+      body {
+        background: var(--bg);
+        font-family: "Segoe UI", Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        color: var(--text);
+      }
+      .scoreboard {
+        max-width: 900px;
+        margin: 2rem auto;
+        background: var(--panel);
+        border-radius: 16px;
+        box-shadow: 0 4px 24px #0001;
+        padding: 2rem 1rem 1.5rem 1rem;
+        border: 1px solid var(--border);
+      }
+      .league {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+      .league-logo {
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+        border-radius: 8px;
+        background: #eee;
+        border: 1px solid var(--border);
+      }
+      .league-name {
+        font-size: 2rem;
+        font-weight: 700;
+        outline: none;
+        border: none;
+        background: transparent;
+        text-align: center;
+        min-width: 200px;
+      }
+      .teams {
+        display: flex;
+        justify-content: space-between;
+        gap: 2rem;
+      }
+      .team-panel {
+        flex: 1;
+        background: var(--bg);
+        border-radius: 12px;
+        padding: 1.5rem 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border: 1px solid var(--border);
+      }
+      .team-logo {
+        width: 80px;
+        height: 80px;
+        object-fit: contain;
+        border-radius: 8px;
+        background: #eee;
+        border: 1px solid var(--border);
+        margin-bottom: 1rem;
+      }
+      .team-name {
+        font-size: 1.5rem;
+        font-weight: 600;
+        outline: none;
+        border: none;
+        background: transparent;
+        text-align: center;
+        min-width: 120px;
+        margin-bottom: 1rem;
+      }
+      .score-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+      .score-label {
+        font-size: 1.1rem;
+        font-weight: 500;
+        min-width: 60px;
+      }
+      .score-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        width: 60px;
+        text-align: center;
+      }
+      .score-btn {
+        font-size: 1.5rem;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: none;
+        background: var(--accent);
+        color: #fff;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .score-btn:active {
+        background: #0097a7;
+      }
+      @media (max-width: 700px) {
+        .teams {
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+      }
+      .logo-upload {
+        margin-top: 0.5rem;
+        font-size: 0.9rem;
+        color: #666;
+      }
+      .timer-block {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 2.5rem;
+        margin-top: 0.5rem;
+      }
+      .timer-main {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0.5rem;
+      }
+      .timer-display {
+        font-size: 4.5rem;
+        font-weight: 900;
+        width: 220px;
+        text-align: center;
+        border: 3px solid var(--accent);
+        border-radius: 16px;
+        background: #fff;
+        color: var(--primary);
+        margin: 0 0.5rem 0 0.5rem;
+        transition: background 0.3s, color 0.3s;
+        letter-spacing: 0.1em;
+        box-shadow: 0 2px 12px #0001;
+      }
+      .timer-controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1.2rem;
+        margin-bottom: 0.2rem;
+      }
+      .timer-btn {
+        font-size: 1.3rem;
+        padding: 0.5rem 1.5rem;
+        border-radius: 8px;
+        border: none;
+        background: var(--accent);
+        color: #fff;
+        cursor: pointer;
+        font-weight: 700;
+        transition: background 0.2s;
+      }
+      .timer-btn:active {
+        background: #0097a7;
+      }
+      .period-label {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin: 0 0.2rem;
+      }
+      .period-value {
+        font-size: 1.7rem;
+        font-weight: 800;
+        width: 40px;
+        text-align: center;
+        margin: 0 0.2rem;
+        min-width: 40px;
+        display: inline-block;
+      }
+      .period-btn {
+        padding: 0.5rem 1rem;
+        font-size: 1.2rem;
+      }
+      @media (max-width: 700px) {
+        .timer-display {
+          font-size: 2.5rem;
+          width: 120px;
+        }
+        .timer-main {
+          margin-bottom: 0.2rem;
+        }
+        .timer-block {
+          margin-bottom: 1.2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="scoreboard">
+      <div class="timer-block">
+        <div class="timer-controls">
+          <button class="timer-btn period-btn" onclick="changePeriod(-1)">
+            -
+          </button>
+          <span class="period-label">Period</span>
+          <span class="period-value" id="periodValue">1</span>
+          <button class="timer-btn period-btn" onclick="changePeriod(1)">
+            +
+          </button>
+        </div>
+        <div class="timer-main">
+          <input
+            type="text"
+            id="timerDisplay"
+            class="timer-display"
+            value="20:00"
+            maxlength="5"
+          />
+        </div>
+        <div class="timer-controls">
+          <button class="timer-btn" onclick="startTimer()">Start</button>
+          <button class="timer-btn" onclick="stopTimer()">Stop</button>
+          <button class="timer-btn" onclick="resetTimer()">Reset</button>
+        </div>
+      </div>
+      <div class="league">
+        <img src="" alt="League Logo" class="league-logo" id="leagueLogo" />
+        <input
+          type="text"
+          class="league-name"
+          id="leagueName"
+          value="League Name"
+        />
+        <input
+          type="file"
+          accept="image/*"
+          id="leagueLogoInput"
+          style="display: none"
+        />
+        <button
+          onclick="document.getElementById('leagueLogoInput').click()"
+          class="logo-upload"
+        >
+          Upload Logo
+        </button>
+      </div>
+      <div class="teams">
+        <div class="team-panel" id="teamA">
+          <img src="" alt="Team A Logo" class="team-logo" id="teamALogo" />
+          <input type="text" class="team-name" id="teamAName" value="Team A" />
+          <input
+            type="file"
+            accept="image/*"
+            id="teamALogoInput"
+            style="display: none"
+          />
+          <button
+            onclick="document.getElementById('teamALogoInput').click()"
+            class="logo-upload"
+          >
+            Upload Logo
+          </button>
+          <div class="score-row">
+            <span class="score-label">Score</span>
+            <button class="score-btn" onclick="updateScore('A', -1, 'score')">
+              -
+            </button>
+            <span class="score-value" id="teamAScore">0</span>
+            <button class="score-btn" onclick="updateScore('A', 1, 'score')">
+              +
+            </button>
+          </div>
+          <div class="score-row">
+            <span class="score-label">Shots</span>
+            <button class="score-btn" onclick="updateScore('A', -1, 'shots')">
+              -
+            </button>
+            <span class="score-value" id="teamAShots">0</span>
+            <button class="score-btn" onclick="updateScore('A', 1, 'shots')">
+              +
+            </button>
+          </div>
+        </div>
+        <div class="team-panel" id="teamB">
+          <img src="" alt="Team B Logo" class="team-logo" id="teamBLogo" />
+          <input type="text" class="team-name" id="teamBName" value="Team B" />
+          <input
+            type="file"
+            accept="image/*"
+            id="teamBLogoInput"
+            style="display: none"
+          />
+          <button
+            onclick="document.getElementById('teamBLogoInput').click()"
+            class="logo-upload"
+          >
+            Upload Logo
+          </button>
+          <div class="score-row">
+            <span class="score-label">Score</span>
+            <button class="score-btn" onclick="updateScore('B', -1, 'score')">
+              -
+            </button>
+            <span class="score-value" id="teamBScore">0</span>
+            <button class="score-btn" onclick="updateScore('B', 1, 'score')">
+              +
+            </button>
+          </div>
+          <div class="score-row">
+            <span class="score-label">Shots</span>
+            <button class="score-btn" onclick="updateScore('B', -1, 'shots')">
+              -
+            </button>
+            <span class="score-value" id="teamBShots">0</span>
+            <button class="score-btn" onclick="updateScore('B', 1, 'shots')">
+              +
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      // State
+      let teamAScore = 0,
+        teamBScore = 0,
+        teamAShots = 0,
+        teamBShots = 0;
+      function updateScore(team, delta, type) {
+        if (team === "A") {
+          if (type === "score") {
+            teamAScore = Math.max(0, teamAScore + delta);
+            document.getElementById("teamAScore").textContent = teamAScore;
+          } else {
+            teamAShots = Math.max(0, teamAShots + delta);
+            document.getElementById("teamAShots").textContent = teamAShots;
+          }
+        } else {
+          if (type === "score") {
+            teamBScore = Math.max(0, teamBScore + delta);
+            document.getElementById("teamBScore").textContent = teamBScore;
+          } else {
+            teamBShots = Math.max(0, teamBShots + delta);
+            document.getElementById("teamBShots").textContent = teamBShots;
+          }
+        }
+      }
+      // Logo uploaders
+      function handleLogoInput(inputId, imgId) {
+        const input = document.getElementById(inputId);
+        const img = document.getElementById(imgId);
+        input.addEventListener("change", (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            img.src = ev.target.result;
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+      handleLogoInput("leagueLogoInput", "leagueLogo");
+      handleLogoInput("teamALogoInput", "teamALogo");
+      handleLogoInput("teamBLogoInput", "teamBLogo");
+      // Set default placeholder logos
+      document.getElementById("leagueLogo").src =
+        "https://upload.wikimedia.org/wikipedia/commons/3/3a/Logo_placeholder.png";
+      document.getElementById("teamALogo").src =
+        "https://upload.wikimedia.org/wikipedia/commons/3/3a/Logo_placeholder.png";
+      document.getElementById("teamBLogo").src =
+        "https://upload.wikimedia.org/wikipedia/commons/3/3a/Logo_placeholder.png";
+      // Timer logic with color, period, and overtime management
+      let timer = 20 * 60;
+      let timerInterval = null;
+      let running = false;
+      let period = 1;
+      const MAX_PERIOD = 3;
+      const OT_PERIOD = 4;
+      function updateTimerDisplay() {
+        const min = String(Math.floor(timer / 60)).padStart(2, "0");
+        const sec = String(timer % 60).padStart(2, "0");
+        const timerDisplay = document.getElementById("timerDisplay");
+        timerDisplay.value = `${min}:${sec}`;
+        // Remove all color classes
+        timerDisplay.classList.remove(
+          "timer-warning",
+          "timer-alert",
+          "timer-danger"
+        );
+        // Add color class based on time left
+        if (timer <= 10) {
+          timerDisplay.classList.add("timer-danger");
+        } else if (timer <= 30) {
+          timerDisplay.classList.add("timer-alert");
+        } else if (timer <= 60) {
+          timerDisplay.classList.add("timer-warning");
+        }
+        // Update period display (show 'OT' for overtime)
+        document.getElementById("periodValue").textContent =
+          period === OT_PERIOD ? "OT" : period;
+      }
+      function tick() {
+        if (timer > 0) {
+          timer--;
+          updateTimerDisplay();
+        } else {
+          stopTimer();
+          // Period logic: auto-advance if not last period, then OT
+          if (period < MAX_PERIOD) {
+            period++;
+            timer = 20 * 60;
+            updateTimerDisplay();
+          } else if (period === MAX_PERIOD) {
+            // Go to OT
+            period = OT_PERIOD;
+            timer = 5 * 60;
+            updateTimerDisplay();
+          } else if (period === OT_PERIOD) {
+            // OT ends, do not advance
+            timer = 0;
+            updateTimerDisplay();
+          }
+        }
+      }
+      function startTimer() {
+        if (!running) {
+          timerInterval = setInterval(tick, 1000);
+          running = true;
+        }
+      }
+      function stopTimer() {
+        clearInterval(timerInterval);
+        running = false;
+      }
+      function resetTimer() {
+        stopTimer();
+        timer = period === OT_PERIOD ? 5 * 60 : 20 * 60;
+        updateTimerDisplay();
+      }
+      document
+        .getElementById("timerDisplay")
+        .addEventListener("change", function () {
+          const val = this.value.split(":");
+          let min = parseInt(val[0], 10);
+          let sec = parseInt(val[1], 10);
+          if (isNaN(min)) min = 0;
+          if (isNaN(sec)) sec = 0;
+          timer = min * 60 + sec;
+          updateTimerDisplay();
+        });
+      function changePeriod(delta) {
+        let newPeriod = period;
+        if (period === OT_PERIOD && delta < 0) {
+          newPeriod = MAX_PERIOD;
+        } else if (period === OT_PERIOD && delta > 0) {
+          newPeriod = OT_PERIOD; // Stay at OT
+        } else {
+          newPeriod = Math.max(1, Math.min(OT_PERIOD, period + delta));
+        }
+        if (newPeriod !== period) {
+          period = newPeriod;
+          // Reset timer to 20:00 for periods 1-3, 5:00 for OT
+          timer = period === OT_PERIOD ? 5 * 60 : 20 * 60;
+          updateTimerDisplay();
+        }
+      }
+      // Init
+      updateTimerDisplay();
+    </script>
+  </body>
+</html>
