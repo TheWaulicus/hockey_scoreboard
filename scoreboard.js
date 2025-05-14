@@ -212,6 +212,23 @@ function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
+function getDefaultTimeouts() {
+  return { A: 0, B: 0 };
+}
+window.timeouts = getDefaultTimeouts();
+
+function renderTimeouts() {
+  document.getElementById("teamATimeouts").textContent = window.timeouts.A;
+  document.getElementById("teamBTimeouts").textContent = window.timeouts.B;
+}
+
+function changeTimeout(team, delta) {
+  if (!["A", "B"].includes(team)) return;
+  window.timeouts[team] = Math.max(0, window.timeouts[team] + delta);
+  renderTimeouts();
+  saveState();
+}
+
 function loadState() {
   const state = JSON.parse(localStorage.getItem(STORAGE_KEY));
   if (!state) return;
@@ -227,7 +244,7 @@ function loadState() {
   document.getElementById("leagueLogo").src = state.leagueLogo;
   document.getElementById("teamALogo").src = state.teamALogo;
   document.getElementById("teamBLogo").src = state.teamBLogo;
-  window.timeouts = state.timeouts;
+  window.timeouts = state.timeouts || getDefaultTimeouts();
   document.body.dataset.theme = state.theme;
   gamePhase = state.gamePhase || "REG";
   updateTimerDisplay();
@@ -263,18 +280,3 @@ window.onload = function () {
   renderPenalties("B");
   renderTimeouts();
 };
-
-// --- Timeout Tracking ---
-window.timeouts = window.timeouts || { A: 0, B: 0 };
-
-function renderTimeouts() {
-  document.getElementById("teamATimeouts").textContent = window.timeouts.A;
-  document.getElementById("teamBTimeouts").textContent = window.timeouts.B;
-}
-
-function changeTimeout(team, delta) {
-  if (!["A", "B"].includes(team)) return;
-  window.timeouts[team] = Math.max(0, window.timeouts[team] + delta);
-  renderTimeouts();
-  saveState();
-}
