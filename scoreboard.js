@@ -217,7 +217,30 @@ function saveStateToFirestore() {
 function getDefaultTimeouts() {
   return { A: 0, B: 0 };
 }
-window.timeouts = getDefaultTimeouts();
+
+function getDefaultState() {
+  return {
+    timerSeconds: 20 * 60,
+    period: 1,
+    teamState: { A: { score: 0, shots: 0 }, B: { score: 0, shots: 0 } },
+    penalties: { A: [], B: [] },
+    leagueName: "League Name",
+    teamAName: "Team A",
+    teamBName: "Team B",
+    leagueLogo: "",
+    teamALogo: "",
+    teamBLogo: "",
+    timeouts: getDefaultTimeouts(),
+    theme: "dark",
+    gamePhase: "REG",
+  };
+}
+
+function resetAll() {
+  SCOREBOARD_DOC.set(getDefaultState()).then(() => {
+    window.location.reload();
+  });
+}
 
 function renderTimeouts() {
   document.getElementById("teamATimeouts").textContent = window.timeouts.A;
@@ -236,7 +259,11 @@ const SCOREBOARD_DOC = db.collection("scoreboards").doc("main");
 let isLocalUpdate = false;
 
 SCOREBOARD_DOC.onSnapshot((doc) => {
-  if (!doc.exists) return;
+  if (!doc.exists) {
+    window.timeouts = getDefaultTimeouts();
+    renderTimeouts();
+    return;
+  }
   const state = doc.data();
   if (!isLocalUpdate) {
     timerSeconds = state.timerSeconds;
@@ -251,7 +278,12 @@ SCOREBOARD_DOC.onSnapshot((doc) => {
     document.getElementById("leagueLogo").src = state.leagueLogo;
     document.getElementById("teamALogo").src = state.teamALogo;
     document.getElementById("teamBLogo").src = state.teamBLogo;
-    window.timeouts = state.timeouts || getDefaultTimeouts();
+    window.timeouts =
+      state.timeouts &&
+      typeof state.timeouts.A === "number" &&
+      typeof state.timeouts.B === "number"
+        ? state.timeouts
+        : getDefaultTimeouts();
     document.body.dataset.theme = state.theme;
     gamePhase = state.gamePhase || "REG";
     updateTimerDisplay();
@@ -267,12 +299,6 @@ SCOREBOARD_DOC.onSnapshot((doc) => {
   }
   isLocalUpdate = false;
 });
-
-function resetAll() {
-  SCOREBOARD_DOC.delete().then(() => {
-    window.location.reload();
-  });
-}
 
 // Call saveStateToFirestore() after every state change (timer, score, period, penalties, settings, timeouts, theme)
 // Call loadState() on window.onload
