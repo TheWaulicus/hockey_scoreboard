@@ -84,6 +84,19 @@ Usage:
     </div>
     <div class="scoreboard">
       <button
+        class="theme-toggle"
+        onclick="toggleTheme()"
+        title="Toggle Light/Dark Mode"
+      >
+        <svg class="theme-icon sun-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"/>
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+        <svg class="theme-icon moon-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+      <button
         class="settings-open"
         onclick="toggleSettings(true)"
         title="Settings"
@@ -145,11 +158,11 @@ Usage:
             <div class="scoreboard-shots-row">
               <span class="score-label">Shots</span>
               <div class="scoreboard-shots-controls">
-                <button class="score-btn">-</button>
+                <button class="score-btn" onclick="updateScore('A', -1, 'shots')">-</button>
                 <span class="score-value scoreboard-shots-main" id="teamAShots"
                   >0</span
                 >
-                <button class="score-btn">+</button>
+                <button class="score-btn" onclick="updateScore('A', 1, 'shots')">+</button>
               </div>
             </div>
             <div class="scoreboard-timeouts-row">
@@ -202,11 +215,11 @@ Usage:
             <div class="scoreboard-shots-row">
               <span class="score-label">Shots</span>
               <div class="scoreboard-shots-controls">
-                <button class="score-btn">-</button>
+                <button class="score-btn" onclick="updateScore('B', -1, 'shots')">-</button>
                 <span class="score-value scoreboard-shots-main" id="teamBShots"
                   >0</span
                 >
-                <button class="score-btn">+</button>
+                <button class="score-btn" onclick="updateScore('B', 1, 'shots')">+</button>
               </div>
             </div>
             <div class="scoreboard-timeouts-row">
@@ -237,6 +250,7 @@ Usage:
               maxlength="5"
             />
           </div>
+          <div id="powerPlayStatus" class="power-play-status"></div>
         </div>
         <div class="timer-controls">
           <button class="timer-btn" onclick="startTimer()">Start</button>
@@ -253,7 +267,6 @@ Usage:
           </button>
         </div>
       </div>
-      <div class="main-row">
         <div class="penalties-row">
           <div class="penalties-team-group penalties-team-group-left">
             <div class="penalties-header">
@@ -278,15 +291,17 @@ Usage:
                 placeholder="Player #"
                 required
               />
-              <input
-                type="number"
-                min="1"
-                max="10"
-                id="teamAPenaltyMinutes"
-                class="penalty-input"
-                placeholder="Min"
+              <select
+                id="teamAPenaltyType"
+                class="penalty-input penalty-type-select"
                 required
-              />
+              >
+                <option value="">Type</option>
+                <option value="Minor">Minor (2 min)</option>
+                <option value="Major">Major (5 min)</option>
+                <option value="Misconduct">Misconduct (10 min)</option>
+                <option value="Game Misconduct">Game Misconduct</option>
+              </select>
               <input
                 type="text"
                 id="teamAPenaltyReason"
@@ -327,15 +342,17 @@ Usage:
                 placeholder="Player #"
                 required
               />
-              <input
-                type="number"
-                min="1"
-                max="10"
-                id="teamBPenaltyMinutes"
-                class="penalty-input"
-                placeholder="Min"
+              <select
+                id="teamBPenaltyType"
+                class="penalty-input penalty-type-select"
                 required
-              />
+              >
+                <option value="">Type</option>
+                <option value="Minor">Minor (2 min)</option>
+                <option value="Major">Major (5 min)</option>
+                <option value="Misconduct">Misconduct (10 min)</option>
+                <option value="Game Misconduct">Game Misconduct</option>
+              </select>
               <input
                 type="text"
                 id="teamBPenaltyReason"
@@ -354,7 +371,6 @@ Usage:
             </form>
           </div>
         </div>
-      </div>
     </div>
     <script>
       const firebaseConfig = {
