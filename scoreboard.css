@@ -180,6 +180,19 @@ body {
   border-color: #fff;
 }
 
+.score-btn:focus-visible,
+.timer-btn:focus-visible,
+.penalty-save-btn:focus-visible,
+.penalty-cancel-btn:focus-visible,
+.penalty-add-btn:focus-visible,
+.settings-save:focus-visible,
+.settings-close:focus-visible,
+.settings-open:focus-visible,
+.reset-all-btn:focus-visible {
+  outline: 3px solid var(--accent-secondary);
+  outline-offset: 3px;
+}
+
 .score-btn:hover,
 .timer-btn:hover,
 .penalty-save-btn:hover,
