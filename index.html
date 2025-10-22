@@ -84,9 +84,13 @@ Usage:
     </div>
     <div class="scoreboard">
       <button
+        id="themeToggleButton"
         class="theme-toggle"
         onclick="toggleTheme()"
         title="Toggle Light/Dark Mode"
+        aria-label="Toggle light or dark theme"
+        aria-pressed="false"
+        type="button"
       >
         <svg class="theme-icon sun-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="5"/>
