@@ -7,11 +7,11 @@
   --bg-tertiary: #181c20;
   --bg-quaternary: #1e2328;
   --text-primary: #eaf6ff;
-  --text-secondary: #8fa3b8;
-  --text-muted: #b6c6d6;
+  --text-secondary: #a2b6cc; /* increased contrast */
+  --text-muted: #c3d2e2;
   --accent-primary: #0af2ff;
-  --accent-secondary: #ff2a2a;
-  --border-color: #0af2ff33;
+  --accent-secondary: #ffc857;
+  --border-color: #0af2ff44;
   --shadow-color: #000a;
   --shadow-accent: #0af2ff22;
 }
@@ -23,13 +23,13 @@
   --bg-tertiary: #f1f5f9;
   --bg-quaternary: #e2e8f0;
   --text-primary: #1e293b;
-  --text-secondary: #475569;
-  --text-muted: #64748b;
-  --accent-primary: #0ea5e9;
-  --accent-secondary: #dc2626;
-  --border-color: #0ea5e933;
+  --text-secondary: #334155; /* increased contrast */
+  --text-muted: #475569;
+  --accent-primary: #0284c7;
+  --accent-secondary: #b91c1c;
+  --border-color: #0284c744;
   --shadow-color: #0000001a;
-  --shadow-accent: #0ea5e922;
+  --shadow-accent: #0284c722;
 }
 
 body {
@@ -43,6 +43,18 @@ body {
   align-items: center;
   justify-content: center;
   transition: background 0.3s ease, color 0.3s ease;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .scoreboard {

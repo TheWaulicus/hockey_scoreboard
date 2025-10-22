@@ -35,12 +35,25 @@ Usage:
     <script src="https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore-compat.js"></script>
   </head>
   <body>
-    <div id="settingsModal" class="settings-modal" style="display: none">
+    <div
+      id="settingsModal"
+      class="settings-modal"
+      style="display: none"
+      aria-hidden="true"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="settingsHeading"
+    >
       <div class="settings-content">
-        <button class="settings-close" onclick="toggleSettings(false)">
+        <button
+          id="settingsCloseButton"
+          class="settings-close"
+          onclick="toggleSettings(false)"
+          type="button"
+        >
           &times;
         </button>
-        <h2>Settings</h2>
+        <h2 id="settingsHeading">Settings</h2>
         <form
           id="settingsForm"
           onsubmit="event.preventDefault(); applySettings();"
@@ -257,9 +270,13 @@ Usage:
               class="timer-display"
               value="20:00"
               maxlength="5"
+              aria-describedby="timerLiveRegion"
             />
+            <span id="timerLiveRegion" class="visually-hidden" aria-live="polite">
+              Timer set to 20 minutes
+            </span>
           </div>
-          <div id="powerPlayStatus" class="power-play-status"></div>
+          <div id="powerPlayStatus" class="power-play-status" aria-live="polite"></div>
         </div>
         <div class="timer-controls">
           <button class="timer-btn" onclick="startTimer()">Start</button>
@@ -298,8 +315,12 @@ Usage:
                 id="teamAPenaltyNumber"
                 class="penalty-input"
                 placeholder="Player #"
+                aria-describedby="penaltyNumberHelpA"
                 required
               />
+              <p id="penaltyNumberHelpA" class="visually-hidden">
+                Enter a jersey number between 1 and 99.
+              </p>
               <select
                 id="teamAPenaltyType"
                 class="penalty-input penalty-type-select"
@@ -349,8 +370,12 @@ Usage:
                 id="teamBPenaltyNumber"
                 class="penalty-input"
                 placeholder="Player #"
+                aria-describedby="penaltyNumberHelpB"
                 required
               />
+              <p id="penaltyNumberHelpB" class="visually-hidden">
+                Enter a jersey number between 1 and 99.
+              </p>
               <select
                 id="teamBPenaltyType"
                 class="penalty-input penalty-type-select"

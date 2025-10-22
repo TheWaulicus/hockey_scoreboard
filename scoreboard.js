@@ -9,6 +9,11 @@ function toggleTheme() {
   body.setAttribute('data-theme', newTheme);
   localStorage.setItem('theme', newTheme);
   
+  const themeToggleButton = document.getElementById('themeToggleButton');
+  if (themeToggleButton) {
+    themeToggleButton.setAttribute('aria-pressed', String(newTheme === 'dark'));
+  }
+  
   updateThemeIcons(newTheme);
   saveStateToFirestore();
 }
@@ -30,6 +35,10 @@ function updateThemeIcons(theme) {
 function initializeTheme() {
   const currentTheme = document.body.getAttribute('data-theme') || 'dark';
   updateThemeIcons(currentTheme);
+  const themeToggleButton = document.getElementById('themeToggleButton');
+  if (themeToggleButton) {
+    themeToggleButton.setAttribute('aria-pressed', String(currentTheme === 'dark'));
+  }
 }
 
 // Call initialize theme when DOM is loaded
@@ -48,7 +57,15 @@ const REGULATION_PERIODS = 3;
 function updateTimerDisplay() {
   const min = String(Math.floor(timerSeconds / 60)).padStart(2, "0");
   const sec = String(timerSeconds % 60).padStart(2, "0");
-  document.getElementById("timerDisplay").value = `${min}:${sec}`;
+  const timerValue = `${min}:${sec}`;
+  const timerDisplay = document.getElementById("timerDisplay");
+  if (timerDisplay) {
+    timerDisplay.value = timerValue;
+  }
+  const timerLiveRegion = document.getElementById("timerLiveRegion");
+  if (timerLiveRegion) {
+    timerLiveRegion.textContent = `Timer set to ${min} minutes and ${sec} seconds`;
+  }
 }
 
 function startTimer() {
@@ -122,10 +139,58 @@ function updateScore(team, delta, type) {
 }
 
 // Settings modal
+let lastFocusedElement = null;
+let settingsFocusTrapListener = null;
+
 function toggleSettings(show) {
-  document.getElementById("settingsModal").style.display = show
-    ? "flex"
-    : "none";
+  const modal = document.getElementById("settingsModal");
+  if (!modal) return;
+
+  if (show) {
+    lastFocusedElement = document.activeElement;
+    modal.style.display = "flex";
+    modal.setAttribute("aria-hidden", "false");
+
+    const focusableElements = modal.querySelectorAll(
+      'a[href], button:not([disabled]), textarea, input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    );
+    const firstFocusable = focusableElements[0];
+    const lastFocusable = focusableElements[focusableElements.length - 1];
+
+    if (firstFocusable) {
+      firstFocusable.focus();
+    }
+
+    settingsFocusTrapListener = (event) => {
+      if (event.key !== "Tab") return;
+
+      if (event.shiftKey) {
+        if (document.activeElement === firstFocusable) {
+          event.preventDefault();
+          lastFocusable.focus();
+        }
+      } else {
+        if (document.activeElement === lastFocusable) {
+          event.preventDefault();
+          firstFocusable.focus();
+        }
+      }
+    };
+
+    modal.addEventListener("keydown", settingsFocusTrapListener);
+  } else {
+    modal.style.display = "none";
+    modal.setAttribute("aria-hidden", "true");
+
+    if (settingsFocusTrapListener) {
+      modal.removeEventListener("keydown", settingsFocusTrapListener);
+      settingsFocusTrapListener = null;
+    }
+
+    if (lastFocusedElement && typeof lastFocusedElement.focus === "function") {
+      lastFocusedElement.focus();
+    }
+  }
 }
 
 function applySettings() {
